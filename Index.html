@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mr. Bean & Teddy - 3D Pixel Art</title>
+<style>
+/* ===== COLOR PALETTE (from your original code) ===== */
+.X00 { background-color: black; }
+.XFD { background-color: #cccccc; }
+.XFF { background-color: transparent; }
+.X01 { background-color: #281b0a; }
+.X02 { background-color: #2c1e0e; }
+.X03 { background-color: #865334; }
+.X0B { background-color: #9a6344; }
+.X0F { background-color: #62432f; }
+.X13 { background-color: #9d6a4f; }
+.X14 { background-color: #9c6748; }
+.X17 { background-color: #6b6b6b; }
+.X1A { background-color: #87583a; }
+.X1B { background-color: #845231; }
+.X1C { background-color: #965f41; }
+.X21 { background-color: #9c6345; }
+.X22 { background-color: #8a593b; }
+.X27 { background-color: #75472f; }
+.X28 { background-color: #74482f; }
+.X2C { background-color: #aa7d66; }
+.X2D { background-color: #b4846d; }
+.X2E { background-color: #9c6346; }
+.X2F { background-color: #905e43; }
+.X31 { background-color: #282828; }
+.X33 { background-color: #b6896c; }
+.X34 { background-color: #ffffff; }
+.X35 { background-color: #b37b62; }
+.X36 { background-color: #965f40; }
+.X38 { background-color: #bd8e72; }
+.X3A { background-color: #b78272; }
+.X3B { background-color: #774235; }
+.X3C { background-color: #815339; }
+.X3E { background-color: #c69680; }
+.X3F { background-color: #ad806d; }
+.X40 { background-color: #b57b67; }
+.X43 { background-color: #bd8b72; }
+.X44 { background-color: #9c725c; }
+.X45 { background-color: #bb8972; }
+.X49 { background-color: #bd8e74; }
+.X4A { background-color: #be886c; }
+.X4B { background-color: #83553b; }
+.X4C { background-color: #ac765a; }
+.X4D { background-color: #9c694c; }
+.X4E { background-color: #a26a47; }
+.X4F { background-color: #8f5e3e; }
+.X51 { background-color: #805334; }
+.X55 { background-color: #232323; }
+.X56 { background-color: #9f6849; }
+.X57 { background-color: #9a644a; }
+.X5F { background-color: #87553b; }
+.X60 { background-color: #966f5b; }
+.X61 { background-color: #513125; }
+.X62 { background-color: #e68583; }
+.X63 { background-color: #e67973; }
+.X64 { background-color: #c6615a; }
+.X65 { background-color: #e6918b; }
+.X66 { background-color: #e4686a; }
+.X67 { background-color: #f19e98; }
+.X68 { background-color: #894746; }
+.X69 { background-color: #ff9392; }
+.X6A { background-color: #eea5a4; }
+.X6B { background-color: #fbbebe; }
+.X6C { background-color: #be504d; }
+.XAF { background-color: #593d29; }
+.XB0 { background-color: #966c4a; }
+.XB1 { background-color: #79553a; }
+.XB2 { background-color: #b9855c; }
+.XB5 { background-color: #6c6c6c; }
+.XBF { background-color: #878787; }
+.XC0 { background-color: #745844; }
+
+/* ===== 3D ISOMETRIC SETUP ===== */
+body {
+  margin: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.scene {
+  perspective: 800px;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.isometric {
+  transform: rotateX(55deg) rotateZ(-45deg) translateY(-20px);
+  transform-style: preserve-3d;
+}
+
+/* ===== PIXEL GRID SYSTEM ===== */
+.pixel-grid {
+  display: grid;
+  gap: 2px;
+  transform-style: preserve-3d;
+}
+
+.pixel {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  box-shadow: inset 0 0 2px rgba(255,255,255,0.1);
+  transition: transform 0.3s ease;
+}
+
+.pixel:hover {
+  transform: scale(1.3);
+  z-index: 10;
+}
+
+/* ===== MR. BEAN - 32x40 PIXEL ART ===== */
+.mrbean-container {
+  position: relative;
+  transform-style: preserve-3d;
+  animation: float 3s ease-in-out infinite;
+}
+
+.mrbean-container .pixel-grid {
+  grid-template-columns: repeat(32, 14px);
+  grid-template-rows: repeat(40, 14px);
+}
+
+/* ===== TEDDY BEAR - 24x28 PIXEL ART ===== */
+.teddy-container {
+  position: relative;
+  transform-style: preserve-3d;
+  margin-left: 20px;
+  animation: float 3s ease-in-out 1.5s infinite;
+}
+
+.teddy-container .pixel-grid {
+  grid-template-columns: repeat(24, 12px);
+  grid-template-rows: repeat(28, 12px);
+}
+
+/* ===== 3D EFFECT ===== */
+.entity-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 40px;
+  transform-style: preserve-3d;
+  padding: 40px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+/* ===== SHADOW ===== */
+.shadow {
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 20px;
+  background: radial-gradient(ellipse, rgba(0,0,0,0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(10px);
+  z-index: -1;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotateX(0deg); }
+  50% { transform: translateY(-15px) rotateX(2deg); }
+}
+
+@keyframes wave {
+  0%, 100% { transform: rotateZ(0deg); }
+  50% { transform: rotateZ(5deg); }
+}
+
+@keyframes cameraMove {
+  0% { transform: rotateX(55deg) rotateZ(-45deg) translateY(-20px) scale(1); }
+  50% { transform: rotateX(55deg) rotateZ(-45deg) translateY(-30px) scale(1.05); }
+  100% { transform: rotateX(55deg) rotateZ(-45deg) translateY(-20px) scale(1); }
+}
+
+.isometric {
+  animation: cameraMove 8s ease-in-out infinite;
+}
+
+/* ===== MR. BEAN PIXEL DATA (32x40) ===== */
+/* Row 1-3: Hair (brown) */
+.mrbean .r1 { background: #4a2810; }
+.mrbean .r2 { background: #5c3218; }
+.mrbean .r3 { background: #3d200c; }
+
+/* Row 4-8: Face (skin tone) */
+.mrbean .skin { background: #f5d0b8; }
+.mrbean .skin-dark { background: #e8c0a8; }
+.mrbean .eye-white { background: #ffffff; }
+.mrbean .pupil { background: #1a1a1a; }
+.mrbean .eyebrow { background: #3d200c; }
+
+/* Row 9-12: Mouth area */
+.mrbean .mouth { background: #c0392b; }
+.mrbean .mouth-inner { background: #8b1a1a; }
+
+/* Row 13-18: Jacket (dark brown/tweed) */
+.mrbean .jacket { background: #5c3d2e; }
+.mrbean .jacket-light { background: #7a5240; }
+.mrbean .tie { background: #2c1810; }
+.mrbean .shirt { background: #e8e0d8; }
+
+/* Row 19-24: Trousers (dark grey) */
+.mrbean .trousers { background: #3d3d3d; }
+.mrbean .trousers-light { background: #4d4d4d; }
+
+/* Row 25-28: Shoes */
+.mrbean .shoe { background: #1a1a1a; }
+.mrbean .shoe-detail { background: #2a2a2a; }
+
+/* ===== TEDDY BEAR PIXEL DATA (24x28) ===== */
+.teddy .fur { background: #c4956a; }
+.teddy .fur-light { background: #dbb08a; }
+.teddy .fur-dark { background: #a87d54; }
+.teddy .eye { background: #1a1a1a; }
+.teddy .nose { background: #3d1a0a; }
+.teddy .ear { background: #dbb08a; }
+.teddy .ear-inner { background: #f0c8a8; }
+.teddy .paw { background: #b88960; }
+.teddy .belly { background: #e8c8b0; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .entity-wrapper {
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    transform: scale(0.7);
+  }
+  .pixel {
+    width: 10px;
+    height: 10px;
+  }
+  .mrbean-container .pixel-grid {
+    grid-template-columns: repeat(32, 10px);
+    grid-template-rows: repeat(40, 10px);
+  }
+  .teddy-container .pixel-grid {
+    grid-template-columns: repeat(24, 9px);
+    grid-template-rows: repeat(28, 9px);
+  }
+}
+
+@media (max-width: 480px) {
+  .entity-wrapper {
+    transform: scale(0.5);
+  }
+}
+
+/* ===== GROUND SHADOW ===== */
+.ground-shadow {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 30px;
+  background: radial-gradient(ellipse, rgba(0,0,0,0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(20px);
+  z-index: 0;
+}
+
+/* ===== LABEL ===== */
+.label {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255,255,255,0.8);
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: rgba(0,0,0,0.4);
+  padding: 10px 30px;
+  border-radius: 30px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.1);
+  z-index: 10;
+}
+
+.label span {
+  color: #f5d0b8;
+  font-weight: bold;
+}
+</style>
+</head>
+<body>
+<div class="scene">
+  <div class="isometric">
+    <div class="entity-wrapper">
+
+      <!-- ===== MR. BEAN ===== -->
+      <div class="mrbean-container">
+        <div class="pixel-grid">
+          <!-- ROW 1: Hair top -->
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div>
+          <!-- ROW 2: Hair -->
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div>
+          <!-- ROW 3: Hair + forehead -->
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div>
+          <!-- ROW 4: Eyes row -->
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean eye-white"></div><div class="pixel mrbean pupil"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean eye-white"></div><div class="pixel mrbean pupil"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div>
+          <!-- ROW 5: Eyebrows -->
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean eyebrow"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean eyebrow"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div>
+          <!-- ROW 6: Face -->
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div>
+          <!-- ROW 7: Nose area -->
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div>
+          <!-- ROW 8: Mouth -->
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean mouth"></div><div class="pixel mrbean mouth"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div>
+          <!-- ROW 9: Chin -->
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div>
+          <!-- ROW 10: Neck area -->
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean skin"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div>
+          <!-- ROW 11-16: Jacket -->
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean shirt"></div><div class="pixel mrbean shirt"></div><div class="pixel mrbean tie"></div><div class="pixel mrbean tie"></div><div class="pixel mrbean shirt"></div><div class="pixel mrbean shirt"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div>
+          <!-- ROW 12-13: Repeat jacket pattern -->
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean shirt"></div><div class="pixel mrbean shirt"></div><div class="pixel mrbean tie"></div><div class="pixel mrbean tie"></div><div class="pixel mrbean shirt"></div><div class="pixel mrbean shirt"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div>
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean shirt"></div><div class="pixel mrbean shirt"></div><div class="pixel mrbean tie"></div><div class="pixel mrbean tie"></div><div class="pixel mrbean shirt"></div><div class="pixel mrbean shirt"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div>
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean shirt"></div><div class="pixel mrbean shirt"></div><div class="pixel mrbean tie"></div><div class="pixel mrbean tie"></div><div class="pixel mrbean shirt"></div><div class="pixel mrbean shirt"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div>
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean shirt"></div><div class="pixel mrbean shirt"></div><div class="pixel mrbean shirt"></div><div class="pixel mrbean shirt"></div><div class="pixel mrbean shirt"></div><div class="pixel mrbean shirt"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div>
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean jacket"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div>
+          <!-- ROW 17-22: Trousers -->
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div>
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div>
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div>
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div>
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div>
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div>
+          <!-- ROW 23-24: Legs -->
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div>
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel trousers"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div>
+          <!-- ROW 25-28: Shoes -->
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div>
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div>
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div>
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel shoe"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div>
+          <!-- ROW 29-30: Ground level -->
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div>
+          <div class="pixel mrbean r1"></div><div class="pixel mrbean r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div><div class="pixel r1"></div>
+        </div>
+        <div class="shadow"></div>
+      </div>
+
+      <!-- ===== TEDDY BEAR (Simplified version - 24x28) ===== -->
+      <div class="teddy-container">
+        <div class="pixel-grid" style="grid-template-columns: repeat(24, 12px); grid-template-rows: repeat(28, 12px);">
+          <!-- Rows 1-5: Head & Ears -->
+          <div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+          <div class="pixel teddy fur"></div><div class="pixel teddy ear"></div><div class="pixel teddy ear"></div><div class="pixel teddy ear"></div><div class="pixel teddy ear-inner"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy ear"></div><div class="pixel teddy ear"></div><div class="pixel teddy ear"></div><div class="pixel teddy ear-inner"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+          <div class="pixel teddy fur"></div><div class="pixel teddy ear"></div><div class="pixel teddy ear-inner"></div><div class="pixel teddy ear"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy ear"></div><div class="pixel teddy ear-inner"></div><div class="pixel teddy ear"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+          <div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+          <div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+          <!-- Row 6-8: Face details -->
+          <div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+          <div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy eye"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy eye"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+          <div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy nose"></div><div class="pixel teddy nose"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy nose"></div><div class="pixel teddy nose"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy fur-light"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+          <!-- Row 9-12: Body -->
+          <div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+          <div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+          <div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy belly"></div><div class="pixel teddy belly"></div><div class="pixel teddy belly"></div><div class="pixel teddy belly"></div><div class="pixel teddy belly"></div><div class="pixel teddy belly"></div><div class="pixel teddy belly"></div><div class="pixel teddy belly"></div><div class="pixel teddy belly"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+          <div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy belly"></div><div class="pixel teddy belly"></div><div class="pixel teddy belly"></div><div class="pixel teddy belly"></div><div class="pixel teddy belly"></div><div class="pixel teddy belly"></div><div class="pixel teddy belly"></div><div class="pixel teddy belly"></div><div class="pixel teddy belly"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+          <!-- Row 13-16: Arms -->
+          <div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy paw"></div><div class="pixel teddy paw"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur"></div><div class="pixel teddy paw"></div><div class="pixel teddy paw"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+          <div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy paw"></div><div class="pixel teddy paw"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy paw"></div><div class="pixel teddy paw"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+          <div class="pixel teddy fur"></div><div class="pixel teddy paw"></div><div class="pixel teddy paw"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy paw"></div><div class="pixel teddy paw"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+          <div class="pixel teddy fur"></div><div class="pixel teddy paw"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy paw"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+          <!-- Row 17-20: Legs -->
+          <div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+          <div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+          <div class="pixel teddy fur"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+          <div class="pixel teddy fur"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+          <!-- Row 21-24: Feet -->
+          <div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy paw"></div><div class="pixel teddy paw"></div><div class="pixel teddy paw"></div><div class="pixel teddy paw"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy paw"></div><div class="pixel teddy paw"></div><div class="pixel teddy paw"></div><div class="pixel teddy paw"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+          <div class="pixel teddy fur"></div><div class="pixel teddy paw"></div><div class="pixel teddy paw"></div><div class="pixel teddy paw"></div><div class="pixel teddy paw"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur"></div><div class="pixel teddy paw"></div><div class="pixel teddy paw"></div><div class="pixel teddy paw"></div><div class="pixel teddy paw"></div><div class="pixel teddy paw"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+          <div class="pixel teddy fur"></div><div class="pixel teddy paw"></div><div class="pixel teddy paw"></div><div class="pixel teddy paw"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy paw"></div><div class="pixel teddy paw"></div><div class="pixel teddy paw"></div><div class="pixel teddy paw"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+          <div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur-dark"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+          <!-- Row 25-28: Ground -->
+          <div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+          <div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+          <div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+          <div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div><div class="pixel teddy fur"></div>
+        </div>
+        <div class="shadow"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="ground-shadow"></div>
+<div class="label">🎬 <span>Mr. Bean</span> & <span>Teddy</span> 🧸</div>
+
+<script>
+// Add some interactive hover effects
+document.querySelectorAll('.pixel').forEach(pixel => {
+  pixel.addEventListener('mouseenter', function() {
+    this.style.transform = 'scale(1.5)';
+    this.style.zIndex = '100';
+    this.style.boxShadow = '0 0 20px rgba(255,255,255,0.5)';
+  });
+  pixel.addEventListener('mouseleave', function() {
+    this.style.transform = 'scale(1)';
+    this.style.zIndex = '1';
+    this.style.boxShadow = 'inset 0 0 2px rgba(255,255,255,0.1)';
+  });
+});
+
+// Click to make Mr. Bean wave
+document.querySelector('.mrbean-container').addEventListener('click', function() {
+  this.style.animation = 'none';
+  setTimeout(() => {
+    this.style.animation = 'wave 0.5s ease-in-out 3';
+  }, 10);
+  setTimeout(() => {
+    this.style.animation = 'float 3s ease-in-out infinite';
+  }, 1600);
+});
+</script>
+</body>
+</html>
